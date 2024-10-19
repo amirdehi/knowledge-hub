@@ -20,46 +20,46 @@
 
 ### 1. Clone the Repository
 
-git clone https://github.com/your-username/knowledgehub.git
+  git clone https://github.com/your-username/knowledgehub.git
 
-cd knowledgehub
+  cd knowledgehub
 
 ### 2. Install Dependencies
 
 For the frontend:
 
-cd frontend
+  cd frontend
 
-npm install
+  npm install
 
 For the backend:
 
-cd backend
+  cd backend
 
-npm install
+  npm install
 
 ### 3. Set Up Environment Variables
 
 Create a .env file in the backend folder with the following content:
 
-MONGODB_URI=mongodb://yourUsername:yourPassword@localhost:27017/knowledgehub
+  MONGODB_URI=mongodb://yourUsername:yourPassword@localhost:27017/knowledgehub
 
 Note: Replace yourUsername and yourPassword with your MongoDB credentials.
 
 ### 4. Run the Application
 Backend:
 
-cd backend
+  cd backend
 
-npm start
+  npm start
 
 
 Frontend:
 
 In a separate terminal, run:
 
-cd frontend
+  cd frontend
 
-npm start
+  npm start
 
 The app should now be accessible at http://localhost:3000 on your local machine.
