@@ -28,7 +28,7 @@
 
 For the frontend:
 
-  cd frontend
+  cd knowledge-hub
 
   npm install
 
