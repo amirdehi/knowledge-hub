@@ -1,6 +1,7 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const cors = require('cors');
+const sequelize = require('./database'); // Import database connection
+const Message = require('./models/Message'); // Import Message model
 
 const app = express();
 const port = 5000;
@@ -9,23 +10,22 @@ const port = 5000;
 app.use(cors());
 app.use(express.json());
 
-// MongoDB Connection
-mongoose.connect('mongodb://localhost:27017/knowledgehub')
-    .then(() => console.log('MongoDB connected'))
-    .catch((err) => console.error('MongoDB connection error:', err));
-
-// Routes
-const Message = require('./models/Message');
+// Sync database
+sequelize.sync()
+    .then(() => console.log('Database synchronized'))
+    .catch(err => console.error('Sync error:', err));
 
 // Get all messages or search by term
 app.get('/api/messages', async (req, res) => {
     const searchTerm = req.query.search || '';
     try {
-        const messages = await Message.find({
-            $or: [
-                { title: { $regex: searchTerm, $options: 'i' } },
-                { content: { $regex: searchTerm, $options: 'i' } },
-            ],
+        const messages = await Message.findAll({
+            where: {
+                [sequelize.Op.or]: [
+                    { title: { [sequelize.Op.like]: `%${searchTerm}%` } },
+                    { content: { [sequelize.Op.like]: `%${searchTerm}%` } }
+                ]
+            }
         });
         res.json(messages);
     } catch (error) {
@@ -37,14 +37,12 @@ app.get('/api/messages', async (req, res) => {
 app.post('/api/messages', async (req, res) => {
     const { title, content } = req.body;
     try {
-        const newMessage = new Message({ title, content });
-        await newMessage.save();
+        const newMessage = await Message.create({ title, content });
         res.status(201).json(newMessage);
     } catch (error) {
         res.status(500).json({ error: 'An error occurred while adding the message.' });
     }
 });
-
 
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
